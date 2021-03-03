@@ -3,13 +3,8 @@ extends layout.pug
 block content
   h1 Update Book
   form(method='post' action=`/books/${book.id}`)
-    h2.error Oooops!
-        ul.error
-            li Author is required
-            li Name is required
-            li Genre is required 
-            li Year is required
-
+    if error
+      h2.error #{error}
     p
       label(for='title') Title
       input#title(name='title' type='text' value=`${book.title}`)
@@ -31,4 +26,3 @@ block content
       a.button(href='/books') Cancel
     p
       input(type='submit' value='Delete Book')
-  script(src='/javascripts/updateForm.js')

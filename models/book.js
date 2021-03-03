@@ -32,8 +32,24 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    genre: DataTypes.STRING,
-    year: DataTypes.INTEGER
+    genre: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Please enter a valid value for the genre property'
+        }
+      }
+    },
+    year: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Please enter a valid value for the year property'
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'Book',

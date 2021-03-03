@@ -59,21 +59,31 @@ router.get('/books/:id', asyncHandler(async (req, res, next) => {
 }))
 
 // POST Route for updating books
-router.post('/books/:id', asyncHandler(async (req, res, next) => {
-	const book = await Book.findByPk(req.params.id);
-	book.title = req.body.title
-	book.author = req.body.author
-	book.genre = req.body.genre
-	book.year = parseInt(req.body.year)
-	book.save();
-	res.redirect(`/books/${book.id}`);
-}))
+router.post('/books/:id', async (req, res, next) => {
+	try {
+		const book = await Book.findByPk(req.params.id);
+		book.title = req.body.title
+		book.author = req.body.author
+		book.genre = req.body.genre
+		book.year = parseInt(req.body.year)
+		await book.save();
+		res.redirect(`/books`);
+	} catch (error) {
+		if (error.name === "SequelizeValidationError") {
+			const book = await Book.findByPk(req.params.id);
+			console.log(error.errors[0].message);
+			res.render('update-book', {book, error: error.errors[0].message})
+			//res.render(`update-book`, { book, errors: error.errors})	
+		}
+	}
+
+})
 
 // Delete POST Route
 router.post('/books/:id/delete', asyncHandler(async (req, res, next) => {
 	const book = await Book.findByPk(req.params.id);
 	book.destroy()
-	//res.redirect('/books');
+	res.redirect('/books');
 }))
 
 router.post('/books/search/:query', asyncHandler(async (req, res, next) => {
